@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["--pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0", 
+                    "--train_data_dir=/home/zicheng/Projects/storyTeller/test_images/cat", 
+                    "--learnable_property=object", 
+                    "--placeholder_token=<cat-toy>", 
+                    "--initializer_token=toy",
+                    "--resolution=512", 
+                    "--train_batch_size=1", 
+                    "--gradient_accumulation_steps=4", 
+                    "--max_train_steps=3000", 
+                    "--learning_rate=5.0e-04", 
+                    "--scale_lr", 
+                    "--lr_scheduler=constant", 
+                    "--lr_warmup_steps=0", 
+                    "--output_dir=textual_inversion_cat"]
+        }
+    ]
+}
