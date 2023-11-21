@@ -33,20 +33,24 @@
                     "--learnable_property=object",
                     "--initializer_token=toy",
                     "--placeholder_token=<cat-toy>",
+                    "--repeats=21",
+                    "--save_as_full_pipeline",
+                    "--validation_prompt=A photo of <cat-toy>",
                     // end textual inversion
                     "--caption_column=text",
                     "--resolution=1024", 
                     "--random_flip",
                     "--train_batch_size=1",
                     "--num_train_epochs=2", 
-                    "--checkpointing_steps=500",
+                    "--checkpointing_steps=600",
                     "--learning_rate=1e-04", 
                     "--lr_scheduler=constant", 
                     "--lr_warmup_steps=0",
                     "--mixed_precision=fp16",
                     "--seed=42",
-                    "--output_dir=textual-inversion-cat-lora-sdxl",
-                    "--validation_prompt=A photo of *"]
+                    "--output_dir=./experiments/textual-inversion-cat-lora-sdxl",
+                    "--max_train_steps=500"
+                    ]
         }
     ]
 }

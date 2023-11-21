@@ -1,0 +1,54 @@
+pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
+pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
+# 
+inference_prompt: Luna is a forest sprite with green skin and leaves for hair.
+learnable_property: object
+initializer_token: cha
+placeholder_token: <elf>
+repeats: 21
+save_as_full_pipeline: true
+validation_prompt: A photo of <elf>
+caption_column: text
+resolution: 1024
+random_flip: true
+train_batch_size: 1
+num_train_epochs: 2
+checkpointing_steps: 5
+learning_rate: 0.0001
+lr_scheduler: constant
+lr_warmup_steps: 0
+mixed_precision: fp16
+seed: 42
+character_name: luna
+output_dir: ./experiments/textual-inversion-luna-lora-sdxl
+train_data_dir: /home/zicheng/Projects/storyTeller/loop_images
+lora_ckpt_dir: checkpoint-1200
+max_train_steps: 10
+num_of_generated_img: 10
+dmin_c: 2
+dsize_c: 7
+infer_steps: 1
+adam_epsilon: 0.000000001
+adam_weight_decay: 0.01
+adam_beta1: 0.9
+adam_beta2: 0.99
+
+# inherited from origin
+gradient_accumulation_steps: 1
+report_to: tensorboard
+push_to_hub: false
+num_vectors: 1
+enable_xformers_memory_efficient_attention: false
+rank: 4
+train_text_encoder: false
+allow_tf32: false
+scale_lr: false
+use_8bit_adam: false
+text_inv: false # text_inv only
+lora: false     # lora
+center_crop: true
+dataloader_num_workers: 0
+noise_offset: 0
+max_grad_norm: 1.0
+num_validation_images: 4
+validation_epochs: 1

@@ -246,8 +246,14 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="sd-model-finetuned-lora",
+        default="sd-model-finetuned-text-inv-lora",
         help="The output directory where the model predictions and checkpoints will be written.",
+    )
+    parser.add_argument(
+        "--output_dir_per_loop",
+        type=str,
+        default="sd-model-finetuned-text-inv-lora",
+        help="The output directory where the model predictions and checkpoints will be written. with loop",
     )
     parser.add_argument(
         "--cache_dir",
@@ -386,6 +392,11 @@ def parse_args(input_args=None):
     parser.add_argument("--adam_epsilon", type=float, default=1e-08, help="Epsilon value for the Adam optimizer")
     parser.add_argument("--max_grad_norm", default=1.0, type=float, help="Max gradient norm.")
     parser.add_argument("--push_to_hub", action="store_true", help="Whether or not to push the model to the Hub.")
+    parser.add_argument(
+        "--save_as_full_pipeline",
+        action="store_true",
+        help="Save the complete stable diffusion pipeline.",
+    )
     parser.add_argument("--hub_token", type=str, default=None, help="The token to use to push to the Model Hub.")
     parser.add_argument(
         "--prediction_type",
@@ -460,7 +471,25 @@ def parse_args(input_args=None):
         default=1,
         help="How many textual inversion vectors shall be used to learn the concept.",
     )
-    parser.add_argument("--repeats", type=int, default=100, help="How many times to repeat the training data.")
+    parser.add_argument("--repeats", type=int, default=1, help="How many times to repeat the training data.")
+    
+    parser.add_argument(
+        "--no_safe_serialization",
+        action="store_true",
+        help="If specified save the checkpoint not in `safetensors` format, but in original PyTorch format instead.",
+    )
+    
+    parser.add_argument(
+        "--lora",
+        action="store_true",
+        help="Only train unet lora",
+    )
+    
+    parser.add_argument(
+        "--text_inv",
+        action="store_true",
+        help="Only train text_inv",
+    )
     
     if input_args is not None:
         args = parser.parse_args(input_args)
@@ -538,6 +567,7 @@ DATASET_NAME_MAPPING = {
 class TextualInversionDataset(Dataset):
     def __init__(
         self,
+        args,
         data_root,
         tokenizer_one,
         tokenizer_two,
@@ -571,7 +601,8 @@ class TextualInversionDataset(Dataset):
 
         self.num_images = len(self.image_paths)
         self._length = self.num_images
-
+        self.args = args
+        
         if set == "train":
             self._length = self.num_images * repeats
 
@@ -598,14 +629,14 @@ class TextualInversionDataset(Dataset):
             image = image.convert("RGB")
         example["original_sizes"] = (image.height, image.width)
         image = self.train_resize(image)
-        if args.center_crop:
-            y1 = max(0, int(round((image.height - args.resolution) / 2.0)))
-            x1 = max(0, int(round((image.width - args.resolution) / 2.0)))
+        if self.args.center_crop:
+            y1 = max(0, int(round((image.height - self.args.resolution) / 2.0)))
+            x1 = max(0, int(round((image.width - self.args.resolution) / 2.0)))
             image = self.train_crop(image)
         else:
-            y1, x1, h, w = self.train_crop.get_params(image, (args.resolution, args.resolution))
+            y1, x1, h, w = self.train_crop.get_params(image, (self.args.resolution, self.args.resolution))
             image = crop(image, y1, x1, h, w)
-        if args.random_flip and random.random() < 0.5:
+        if self.args.random_flip and random.random() < 0.5:
             # flip
             x1 = image.width - x1
             image = self.train_flip(image)
@@ -713,7 +744,26 @@ def encode_prompt(text_encoders, tokenizers, prompt, text_input_ids_list=None):
     return prompt_embeds, pooled_prompt_embeds
 
 
-def main(args):
+def train(args):
+    # for Loop training
+    if "output_dir_per_loop" in args:
+        args.output_dir = args.output_dir_per_loop
+        args.logging_dir = "logs"
+        args.revision=None
+        args.dataset_config_name = None
+        args.cache_dir = None
+        args.dataset_name = None
+        args.resume_from_checkpoint = None
+        args.prediction_type = None
+        args.snr_gamma = None
+        args.checkpoints_total_limit = None
+        args.no_safe_serialization = None
+        
+        print("Redirecting logging directory for theChosenOne Loop training.")
+    if "train_data_dir_per_loop" in args:
+        args.train_data_dir = args.train_data_dir_per_loop
+        
+    
     logging_dir = Path(args.output_dir, args.logging_dir)
 
     accelerator_project_config = ProjectConfiguration(project_dir=args.output_dir, logging_dir=logging_dir)
@@ -1038,11 +1088,25 @@ def main(args):
     # )
     
     # Optimizer creation, with textual inversion
-    params_to_optimize_w_textual = (
-        itertools.chain(unet_lora_parameters, text_lora_parameters_one, text_lora_parameters_two, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
-        if args.train_text_encoder
-        else itertools.chain(unet_lora_parameters, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
-    )
+    if args.text_inv:
+        params_to_optimize_w_textual = (
+            itertools.chain(unet_lora_parameters, text_lora_parameters_one, text_lora_parameters_two, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
+            if args.train_text_encoder
+            else itertools.chain(text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
+        )
+    if args.lora:
+        params_to_optimize_w_textual = (
+            itertools.chain(unet_lora_parameters, text_lora_parameters_one, text_lora_parameters_two, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
+            if args.train_text_encoder
+            else itertools.chain(unet_lora_parameters)
+        )
+    else:
+        # lora + text-inv
+        params_to_optimize_w_textual = (
+            itertools.chain(unet_lora_parameters, text_lora_parameters_one, text_lora_parameters_two, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
+            if args.train_text_encoder
+            else itertools.chain(unet_lora_parameters, text_encoder_one.get_input_embeddings().parameters(), text_encoder_two.get_input_embeddings().parameters())
+        )
     
     optimizer = optimizer_class(
         params_to_optimize_w_textual,
@@ -1065,6 +1129,7 @@ def main(args):
     else:
         # # Dataset and DataLoaders creation:
         train_dataset = TextualInversionDataset(
+            args=args,
             data_root=args.train_data_dir,
             tokenizer_one=tokenizer_one,
             tokenizer_two=tokenizer_two,
@@ -1293,8 +1358,13 @@ def main(args):
     # keep original embeddings as reference
     orig_embeds_params_one = accelerator.unwrap_model(text_encoder_one).get_input_embeddings().weight.data.clone()
     orig_embeds_params_two = accelerator.unwrap_model(text_encoder_two).get_input_embeddings().weight.data.clone()
-
-
+    print()    
+    print("###########################################################################")
+    print("###########################################################################")
+    print("Start Training!")
+    print("###########################################################################")
+    print("###########################################################################")
+    print()
     for epoch in range(first_epoch, args.num_train_epochs):
         unet.train()
         if args.train_text_encoder:
@@ -1469,6 +1539,13 @@ def main(args):
 
         if accelerator.is_main_process:
             if args.validation_prompt is not None and epoch % args.validation_epochs == 0:
+                print()
+                print("###########################################################################")
+                print("###########################################################################")
+                print("Validating and generating images for validation in tensoirboard / wandb.")
+                print("###########################################################################")
+                print("###########################################################################")
+                print()
                 logger.info(
                     f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
                     f" {args.validation_prompt}."
@@ -1515,6 +1592,13 @@ def main(args):
                 torch.cuda.empty_cache()
 
     # Save the lora layers
+    print()
+    print("###########################################################################")
+    print("###########################################################################")
+    print("Saving lora layers")
+    print("###########################################################################")
+    print("###########################################################################")
+    print()
     accelerator.wait_for_everyone()
     if accelerator.is_main_process:
         unet = accelerator.unwrap_model(unet)
@@ -1536,15 +1620,15 @@ def main(args):
             text_encoder_2_lora_layers=text_encoder_2_lora_layers,
         )
 
-        del unet
-        del text_encoder_one
-        del text_encoder_two
-        del text_encoder_lora_layers
-        del text_encoder_2_lora_layers
-        torch.cuda.empty_cache()
-
         # Final inference
         # Load previous pipeline
+        print()
+        print("###########################################################################")
+        print("###########################################################################")
+        print("Testing and generating images for validation in tensoirboard / wandb.")
+        print("###########################################################################")
+        print("###########################################################################")
+        print()
         pipeline = StableDiffusionXLPipeline.from_pretrained(
             args.pretrained_model_name_or_path, vae=vae, revision=args.revision, torch_dtype=weight_dtype
         )
@@ -1576,12 +1660,22 @@ def main(args):
                         }
                     )
 
+        # Save the full model for textual inversion
         if args.push_to_hub and not args.save_as_full_pipeline:
             logger.warn("Enabling full model saving because --push_to_hub=True was specified.")
             save_full_model = True
         else:
             save_full_model = args.save_as_full_pipeline
         if save_full_model:
+            
+            print()
+            print("###########################################################################")
+            print("###########################################################################")
+            print("Saving full model for text inversion!")
+            print("###########################################################################")
+            print("###########################################################################")
+            print()
+            
             pipeline = StableDiffusionXLPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
                 text_encoder=accelerator.unwrap_model(text_encoder_one),
@@ -1594,7 +1688,7 @@ def main(args):
             pipeline.save_pretrained(args.output_dir)
             
         # Save the newly trained embeddings
-        weight_name_one = "learned_embeds.bin" if args.no_safe_serialization else "learned_embeds.safetensors_one"
+        weight_name_one = "learned_embeds.bin" if args.no_safe_serialization else "learned_embeds_one.safetensors"
         save_path_one = os.path.join(args.output_dir, weight_name_one)
         save_progress(
             text_encoder_one,
@@ -1605,7 +1699,7 @@ def main(args):
             safe_serialization=not args.no_safe_serialization,
         )
         
-        weight_name_two = "learned_embeds.bin" if args.no_safe_serialization else "learned_embeds.safetensors_two"
+        weight_name_two = "learned_embeds.bin" if args.no_safe_serialization else "learned_embeds_two.safetensors"
         save_path_two = os.path.join(args.output_dir, weight_name_two)
         save_progress(
             text_encoder_two,
@@ -1634,9 +1728,16 @@ def main(args):
                 ignore_patterns=["step_*", "epoch_*"],
             )
 
+        del unet
+        del text_encoder_one
+        del text_encoder_two
+        del text_encoder_lora_layers
+        del text_encoder_2_lora_layers
+        torch.cuda.empty_cache()
+        
     accelerator.end_training()
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(args)
+    args = parse_args(input_args=None)
+    train(args)
