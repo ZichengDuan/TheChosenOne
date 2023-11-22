@@ -285,7 +285,7 @@ def load_dinov2():
 
 
 if __name__ == "__main__":
-    args = config_2_args("/home/zicheng/Projects/storyTeller/config/theChosenOne.yaml")
+    args = config_2_args("/home/zicheng/Projects/The_Chosen_One/config/theChosenOne.yaml")
     _ = train_loop(args, args.max_loop, start_from=0)
     
     print(args)

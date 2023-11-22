@@ -12,7 +12,7 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             // "args": ["--pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0", 
-            //         "--train_data_dir=/home/zicheng/Projects/storyTeller/test_images/cat", 
+            //         "--train_data_dir=/home/zicheng/Projects/The_Chosen_One/test_images/cat", 
             //         "--learnable_property=object", 
             //         "--placeholder_token=<cat-toy>", 
             //         "--initializer_token=toy",
@@ -29,7 +29,7 @@
             // "args": ["--pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0",
             //         "--pretrained_vae_model_name_or_path=madebyollin/sdxl-vae-fp16-fix",
             //         // start textual inversion 
-            //         "--train_data_dir=/home/zicheng/Projects/storyTeller/test_images/cat",
+            //         "--train_data_dir=/home/zicheng/Projects/The_Chosen_One/test_images/cat",
             //         "--learnable_property=object",
             //         "--initializer_token=toy",
             //         "--placeholder_token=<cat-toy>",

@@ -14,7 +14,7 @@ def config_2_args(path):
     args = parser.parse_args([])
     return args
 
-args = config_2_args("/home/zicheng/Projects/storyTeller/config/theChosenOne.yaml")
+args = config_2_args("/home/zicheng/Projects/The_Chosen_One/config/theChosenOne.yaml")
 
 loop = 1
 model_path = os.path.join(args.output_dir, args.character_name, str(loop))
