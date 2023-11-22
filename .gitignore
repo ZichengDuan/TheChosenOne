@@ -1,3 +1,5 @@
 experiments
 loop_images
 nohup.out
+__pycache__
+.vscode
