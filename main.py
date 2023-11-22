@@ -209,7 +209,7 @@ def kmeans_2D_visualize(args, centers, data, labels, loop_num):
     for i in range(args.kmeans_center):
         cluster_points = np.array(embeddings_2d[labels==i])
         plt.scatter(cluster_points[:, 0], cluster_points[:, 1], label=f"Cluster {i + 1}", s=100)
-    plt.savefig(f"KMeans_res_Loop_{loop_num}.png")
+    plt.savefig(f"kmeans_results/KMeans_res_Loop_{loop_num}.png")
     
         
 def compare_features(image_features, cluster_centroid):
@@ -249,7 +249,7 @@ def load_trained_pipeline(model_path = None, load_lora=True, lora_path=None):
 def config_2_args(path):
     with open(path, 'r') as file:
         yaml_data = yaml.safe_load(file)
-    parser = argparse.ArgumentParser(description="从 YAML 配置生成 argparse 参数")
+    parser = argparse.ArgumentParser(description="Generate args from config")
     for key, value in yaml_data.items():
         parser.add_argument(f'--{key}', type=type(value), default=value)
     
@@ -285,7 +285,7 @@ def load_dinov2():
 
 
 if __name__ == "__main__":
-    args = config_2_args("/home/zicheng/Projects/The_Chosen_One/config/theChosenOne.yaml")
+    args = config_2_args("/config/theChosenOne.yaml")
     _ = train_loop(args, args.max_loop, start_from=0)
     
     print(args)

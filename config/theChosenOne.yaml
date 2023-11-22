@@ -21,8 +21,8 @@ mixed_precision: bf16
 seed: 42
 character_name: 3d_cat
 output_dir: ./experiments
-train_data_dir: /home/zicheng/Projects/The_Chosen_One/loop_images
-backup_data_dir_root: /home/zicheng/Data/theChosenOne/ 
+train_data_dir: ./loop_images
+backup_data_dir_root: /home/zicheng/Data/theChosenOne/  # Your dataset backup folder
 # lora_ckpt_dir: checkpoint-1200
 max_train_steps: 500
 num_of_generated_img: 128
