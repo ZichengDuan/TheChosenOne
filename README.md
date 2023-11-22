@@ -1,6 +1,11 @@
-# The Chosen One: Consistent Characters in Text-to-Image Diffusion Models (Unofficial PyTorch Implementation)
+# The Chosen One: Consistent Characters in Text-to-Image Diffusion Models (Unofficial implementation)
 
-This repository contains the **unofficial** PyTorch implementation of the paper [The Chosen One: Consistent Characters in Text-to-Image Diffusion Models](https://arxiv.org/abs/2311.10093), using the Diffuser framework.
+This repository contains the **unofficial** PyTorch implementation of the paper [The Chosen One: Consistent Characters in Text-to-Image Diffusion Models](https://arxiv.org/abs/2311.10093), using the Diffuser framework. 
+
+**The Chosen One: Consistent Characters in Text-to-Image Diffusion Models**
+Omri Avrahami, Amir Hertz, Yael Vinker, Moab Arar, Shlomi Fruchter, Ohad Fried, Daniel Cohen-Or, Dani Lischinski
+
+Shout out to the authors for their great work.
 
 ## TODO List
 - [x] Code release.
@@ -25,3 +30,14 @@ pip install -r requirements.txt
 
 ### Data folder preperation
  - To be finished
+
+
+### Citing the paper
+```
+@article{avrahami2023chosen,
+  title={The Chosen One: Consistent Characters in Text-to-Image Diffusion Models},
+  author={Avrahami, Omri and Hertz, Amir and Vinker, Yael and Arar, Moab and Fruchter, Shlomi and Fried, Ohad and Cohen-Or, Daniel and Lischinski, Dani},
+  journal={arXiv preprint arXiv:2311.10093},
+  year={2023}
+}
+```
