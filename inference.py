@@ -14,7 +14,7 @@ def config_2_args(path):
     args = parser.parse_args([])
     return args
 
-args = config_2_args("./config/theChosenOne.yaml")
+args = config_2_args("./config/theChosenOne_3d_cat.yaml")
 
 loop = 0
 model_path = os.path.join(args.output_dir, args.character_name, str(loop))
@@ -23,6 +23,6 @@ pipe.to("cuda")
 pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps * args.num_train_epochs}"))
 
 # remember to use the place holader here
-prompt = f"A photo of {args.placeholder_token} wearing blue hat."
+prompt = f"A photo of {args.placeholder_token} near the Statue of Liberty."
 image = pipe(prompt, num_inference_steps=35, guidance_scale=7.5).images[0]
 image.save(f"{args.character_name}.png")

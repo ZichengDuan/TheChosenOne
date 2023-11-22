@@ -92,9 +92,11 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
         # update model output dir for CURRENT loop
         args.output_dir_per_loop = os.path.join(output_dir_base, args.character_name, str(loop))
         
-        # set up the training data folder used in training
+        # set up the training data folder used in training, overwrite and recreate
         args.train_data_dir_per_loop = os.path.join(train_data_dir_base, args.character_name, str(loop))
-        os.makedirs(args.train_data_dir_per_loop, exist_ok=True)
+        if os.path.exists(args.train_data_dir_per_loop):
+            shutil.rmtree(args.train_data_dir_per_loop)
+            os.makedirs(args.train_data_dir_per_loop, exist_ok=True)
         
         # generate new images
         image_embs = []
@@ -134,11 +136,11 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             init_dist = np.mean(cdist(embeddings, embeddings, 'euclidean'))
         else:
             pairwise_distances = np.mean(cdist(embeddings, embeddings, 'euclidean'))
-            if pairwise_distances < init_dist * 0.7:
+            if pairwise_distances < init_dist * args.convergence_scale:
                 print()
                 print("###########################################################################")
                 print("###########################################################################")
-                print(f"Converge at {loop}. Final model saved at {os.path.join(output_dir_base, args.character_name, str(loop - 1))}")
+                print(f"Converge at {loop}. Target distance: {init_dist}, current pairwise distance: {pairwise_distances}. Final model saved at {os.path.join(output_dir_base, args.character_name, str(loop - 1))}")
                 print("###########################################################################")
                 print("###########################################################################")
                 print()

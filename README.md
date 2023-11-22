@@ -4,7 +4,7 @@ This repository contains the **unofficial** PyTorch implementation of the paper 
 
 Shout out to the authors for their great work. 😻😻😻
 
-![Main pipeline](https://github.com/ZichengDuan/The_Chosen_One/blob/main/misc/main.png?raw=true)
+![Main pipeline](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/main.png?raw=true)
 
 ## TODO List
 - [x] Code release.
@@ -19,8 +19,8 @@ Shout out to the authors for their great work. 😻😻😻
 ### Installation and Prerequisites
 Clone the repository and install the required packages:
 ```bash
-git clone git@github.com:ZichengDuan/The_Chosen_One.git
-cd The_Chosen_One
+git clone git@github.com:ZichengDuan/TheChosenOne.git
+cd TheChosenOne
 pip install -r requirements.txt
 ```
 You also need to modify your configuration file in `config/theChosenOne.yaml` to fit your local environment.
