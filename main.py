@@ -134,9 +134,23 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             init_dist = np.mean(cdist(embeddings, embeddings, 'euclidean'))
         else:
             pairwise_distances = np.mean(cdist(embeddings, embeddings, 'euclidean'))
-            if pairwise_distances < init_dist * 0.8:
+            if pairwise_distances < init_dist * 0.7:
+                print()
+                print("###########################################################################")
+                print("###########################################################################")
+                print(f"Converge at {loop}. Final model saved at {os.path.join(output_dir_base, args.character_name, str(loop - 1))}")
+                print("###########################################################################")
+                print("###########################################################################")
+                print()
                 return os.path.join(output_dir_base, args.character_name, str(loop - 1)), 
-        
+            else:
+                print()
+                print("###########################################################################")
+                print("###########################################################################")
+                print(f"Target distance: {init_dist}, current pairwise distance: {pairwise_distances}.")
+                print("###########################################################################")
+                print("###########################################################################")
+                print()
         # clustering
         centers, labels, elements, images = kmeans_clustering(args, embeddings, images = images)
         
@@ -209,7 +223,7 @@ def kmeans_2D_visualize(args, centers, data, labels, loop_num):
     for i in range(args.kmeans_center):
         cluster_points = np.array(embeddings_2d[labels==i])
         plt.scatter(cluster_points[:, 0], cluster_points[:, 1], label=f"Cluster {i + 1}", s=100)
-    plt.savefig(f"kmeans_results/KMeans_res_Loop_{loop_num}.png")
+    plt.savefig(f"kmeans_results/{args.character_name}_KMeans_res_Loop_{loop_num}.png")
     
         
 def compare_features(image_features, cluster_centroid):
@@ -285,7 +299,7 @@ def load_dinov2():
 
 
 if __name__ == "__main__":
-    args = config_2_args("/config/theChosenOne.yaml")
+    args = config_2_args("./config/theChosenOne.yaml")
     _ = train_loop(args, args.max_loop, start_from=0)
     
     print(args)
