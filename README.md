@@ -6,27 +6,45 @@ Shout out to the authors for their great work.
 
 ## TODO List
 - [x] Code release.
-- [ ] Training instructions.
-- [ ] Inference instructions.
-- [ ] Results.
+- [x] Training instructions.
+- [x] Inference instructions.
+- [ ] ControlNet support.
+- [ ] Local image editing.
+- [ ] Some visualization results.
 
 ## Getting Started
 
-### Prerequisites
-Ensure you have the following packages installed:
-- To be finished
-
-### Installation
-<!-- Clone the repository and install the required packages:
+### Installation and Prerequisites
+Clone the repository and install the required packages:
 ```bash
-git clone https://github.com/your-github-username/your-project-name.git
-cd your-project-name
+git clone git@github.com:ZichengDuan/The_Chosen_One.git
+cd The_Chosen_One
 pip install -r requirements.txt
-``` -->
-- To be finished
+```
+You also need to modify your configuration file in `config/theChosenOne.yaml` to fit your local environment.
 
-### Data folder preperation
- - To be finished
+### Data backup folder preperation
+You need to create a backup data folder to store the initial images generated in the first loop for faster training start up next time if you want to train on the same character again.
+This is set up in the configuration file as follows:
+``` 
+backup_data_dir_root: Your absolute path to the data folder
+```
+
+## Run the codes
+### Training
+```
+python main.py
+```
+
+### Inference
+Simply run:
+```
+python inference.py
+```
+The script will load the model you designated in the `inference.py` and your config file.
+
+### Results
+TBD.
 
 
 ### Citing the paper
