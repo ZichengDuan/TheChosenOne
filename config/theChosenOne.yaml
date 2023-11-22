@@ -1,39 +1,41 @@
 pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
 pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
 # 
-inference_prompt: Luna is a forest sprite with green skin and leaves for hair.
+inference_prompt: A 3D animation of a playful kitten, with bright eyes and a mischievous expression, embodying youthful curiosity and joy.
 learnable_property: object
 initializer_token: cha
-placeholder_token: <elf>
-repeats: 21
+placeholder_token: <cat>
+repeats: 1
 save_as_full_pipeline: true
-validation_prompt: A photo of <elf>
+validation_prompt: A photo of <cat>
 caption_column: text
 resolution: 1024
 random_flip: true
 train_batch_size: 1
-num_train_epochs: 2
-checkpointing_steps: 5
-learning_rate: 0.0001
+num_train_epochs: 1
+checkpointing_steps: 500
+learning_rate: 0.00003
 lr_scheduler: constant
 lr_warmup_steps: 0
-mixed_precision: fp16
+mixed_precision: bf16
 seed: 42
-character_name: luna
-output_dir: ./experiments/textual-inversion-luna-lora-sdxl
+character_name: 3d_cat
+output_dir: ./experiments
 train_data_dir: /home/zicheng/Projects/storyTeller/loop_images
-lora_ckpt_dir: checkpoint-1200
-max_train_steps: 10
-num_of_generated_img: 10
-dmin_c: 2
-dsize_c: 7
-infer_steps: 1
+backup_data_dir_root: /home/zicheng/Data/theChosenOne/ 
+# lora_ckpt_dir: checkpoint-1200
+max_train_steps: 500
+num_of_generated_img: 128
+dmin_c: 10
+dsize_c: 20         
+infer_steps: 35
 adam_epsilon: 0.000000001
 adam_weight_decay: 0.01
 adam_beta1: 0.9
 adam_beta2: 0.99
+max_loop: 3
 
-# inherited from origin
+# inherited from origin, no need to change
 gradient_accumulation_steps: 1
 report_to: tensorboard
 push_to_hub: false

@@ -647,6 +647,7 @@ class TextualInversionDataset(Dataset):
         
         placeholder_string = self.placeholder_token
         text = random.choice(self.templates).format(placeholder_string) # a rendering of {}
+        
         example["input_ids_one"] = self.tokenizer_one(
             text,
             padding="max_length",
@@ -744,9 +745,10 @@ def encode_prompt(text_encoders, tokenizers, prompt, text_input_ids_list=None):
     return prompt_embeds, pooled_prompt_embeds
 
 
-def train(args):
+def train(args, loop=0, loop_num = 0):
     # for Loop training
-    if "output_dir_per_loop" in args:
+    if "output_dir_per_loop" in args:#
+        # TODO: better ways to define these vars
         args.output_dir = args.output_dir_per_loop
         args.logging_dir = "logs"
         args.revision=None
@@ -759,7 +761,7 @@ def train(args):
         args.checkpoints_total_limit = None
         args.no_safe_serialization = None
         
-        print("Redirecting logging directory for theChosenOne Loop training.")
+        print("Redirecting logging directory for theChosenOne Loop training. Maintaining some of the None-valued arguements here.")
     if "train_data_dir_per_loop" in args:
         args.train_data_dir = args.train_data_dir_per_loop
         
@@ -1361,7 +1363,7 @@ def train(args):
     print()    
     print("###########################################################################")
     print("###########################################################################")
-    print("Start Training!")
+    print(f"[{loop}/{loop_num}] Start Training!")
     print("###########################################################################")
     print("###########################################################################")
     print()
@@ -1542,7 +1544,7 @@ def train(args):
                 print()
                 print("###########################################################################")
                 print("###########################################################################")
-                print("Validating and generating images for validation in tensoirboard / wandb.")
+                print(f"[{loop}/{loop_num}] Validating and generating images for validation in tensoirboard / wandb.")
                 print("###########################################################################")
                 print("###########################################################################")
                 print()
@@ -1595,7 +1597,7 @@ def train(args):
     print()
     print("###########################################################################")
     print("###########################################################################")
-    print("Saving lora layers")
+    print(f"[{loop}/{loop_num}] Saving lora layers")
     print("###########################################################################")
     print("###########################################################################")
     print()
@@ -1625,7 +1627,7 @@ def train(args):
         print()
         print("###########################################################################")
         print("###########################################################################")
-        print("Testing and generating images for validation in tensoirboard / wandb.")
+        print(f"[{loop}/{loop_num}] Testing and generating images for testing in tensoirboard / wandb.")
         print("###########################################################################")
         print("###########################################################################")
         print()
@@ -1671,7 +1673,7 @@ def train(args):
             print()
             print("###########################################################################")
             print("###########################################################################")
-            print("Saving full model for text inversion!")
+            print(f"[{loop}/{loop_num}] Saving full model for text inversion!")
             print("###########################################################################")
             print("###########################################################################")
             print()
