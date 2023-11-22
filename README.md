@@ -2,7 +2,7 @@
 
 This repository contains the **unofficial** PyTorch implementation of the paper [The Chosen One: Consistent Characters in Text-to-Image Diffusion Models](https://arxiv.org/abs/2311.10093), using the Diffuser framework. 
 
-Shout out to the authors for their great work, also please consider giving a star if you find this implementation helpful.😻😻😻
+Shout out to the authors for their great work, also please consider giving a star🌟 if you find this implementation helpful.😻😻😻
 
 ![Main pipeline](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/main.png?raw=true)
 ![Result](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/result_1.png?raw=true)
