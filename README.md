@@ -5,14 +5,16 @@ This repository contains the **unofficial** PyTorch implementation of the paper 
 Shout out to the authors for their great work. 😻😻😻
 
 ![Main pipeline](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/main.png?raw=true)
+![Result](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/result_1.png?raw=true)
 
+(Note that I didn't carefully adjust the parameters for generating these results and they are still good enough.)
 ## TODO List
 - [x] Code release.
 - [x] Training instructions.
 - [x] Inference instructions.
 - [ ] ControlNet support.
 - [ ] Local image editing.
-- [ ] Some visualization results.
+- [x] Some visualization results.
 
 ## Getting Started
 

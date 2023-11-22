@@ -30,7 +30,7 @@ dmin_c: 10
 dsize_c: 20         
 infer_steps: 35
 adam_epsilon: 0.000000001
-adam_weight_decay: 0.01
+adam_weight_decay: 0.0001
 adam_beta1: 0.9
 adam_beta2: 0.99
 max_loop: 5
