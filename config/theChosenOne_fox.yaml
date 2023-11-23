@@ -1,0 +1,57 @@
+pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
+pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
+# 
+inference_prompt: A 2D animaiton of captivating Arctic fox with fluffy fur, bright eyes and nimble movements, bringing the magic of the icy wilderness to animated life.
+learnable_property: object
+initializer_token: cha
+placeholder_token: <$V$>
+repeats: 1
+save_as_full_pipeline: true
+validation_prompt: A photo of <$V$>
+caption_column: text
+resolution: 1024
+random_flip: true
+train_batch_size: 1
+num_train_epochs: 1
+checkpointing_steps: 500
+learning_rate: 0.00003
+lr_scheduler: constant
+lr_warmup_steps: 0
+mixed_precision: bf16
+seed: 42
+character_name: anime_fox
+output_dir: ./experiments
+train_data_dir: ./loop_images
+backup_data_dir_root: /home/zicheng/Data/theChosenOne/  # Your dataset backup folder
+# lora_ckpt_dir: checkpoint-1200
+max_train_steps: 500
+num_of_generated_img: 128
+dmin_c: 10
+dsize_c: 20         
+infer_steps: 35
+adam_epsilon: 0.000000001
+adam_weight_decay: 0.0001
+adam_beta1: 0.9
+adam_beta2: 0.99
+max_loop: 5
+convergence_scale: 0.8 # 80% in the paper
+
+# inherited from origin, no need to change
+gradient_accumulation_steps: 1
+report_to: tensorboard
+push_to_hub: false
+num_vectors: 1
+enable_xformers_memory_efficient_attention: false
+rank: 4
+train_text_encoder: false
+allow_tf32: false
+scale_lr: false
+use_8bit_adam: false
+text_inv: false # text_inv only
+lora: false     # lora
+center_crop: true
+dataloader_num_workers: 0
+noise_offset: 0
+max_grad_norm: 1.0
+num_validation_images: 4
+validation_epochs: 1

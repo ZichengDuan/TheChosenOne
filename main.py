@@ -96,7 +96,7 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
         args.train_data_dir_per_loop = os.path.join(train_data_dir_base, args.character_name, str(loop))
         if os.path.exists(args.train_data_dir_per_loop):
             shutil.rmtree(args.train_data_dir_per_loop)
-            os.makedirs(args.train_data_dir_per_loop, exist_ok=True)
+        os.makedirs(args.train_data_dir_per_loop, exist_ok=True)
         
         # generate new images
         image_embs = []
@@ -301,7 +301,7 @@ def load_dinov2():
 
 
 if __name__ == "__main__":
-    args = config_2_args("./config/theChosenOne.yaml")
+    args = config_2_args("./config/theChosenOne_fox.yaml")
     _ = train_loop(args, args.max_loop, start_from=0)
     
     print(args)

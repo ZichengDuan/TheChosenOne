@@ -7,7 +7,7 @@ Shout out to the authors for their great work, also please consider giving a sta
 ![Main pipeline](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/main.png?raw=true)
 ![Result](https://github.com/ZichengDuan/TheChosenOne/blob/main/misc/result_1.png?raw=true)
 
-(Note that I didn't carefully adjust the parameters for generating these results and they are still good enough.)
+(Note that I didn't carefully adjust the hyperparameters for generating the results above and they are still good enough.)
 ## TODO List
 - [x] Code release.
 - [x] Training instructions.
@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ```
 You also need to modify your configuration file in `config/theChosenOne.yaml` to fit your local environment.
 
-### Data backup folder preperation
+### Data backup folder preparation
 You need to create a backup data folder to store the initial images generated in the first loop for faster training start up next time if you want to train on the same character again.
 This is set up in the configuration file as follows:
 ``` 

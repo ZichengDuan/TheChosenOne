@@ -14,18 +14,22 @@ def config_2_args(path):
     args = parser.parse_args([])
     return args
 
-args = config_2_args("config/theChosenOne.yaml")
+args = config_2_args("config/theChosenOne_fox.yaml")
 
-loop = 0
+loop = 1
 model_path = os.path.join(args.output_dir, args.character_name, str(loop))
 pipe = DiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
 pipe.to("cuda")
 pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps * args.num_train_epochs}"))
 
-prompt_postfix = "running."
+prompt_postfix = " sitting on a rocket."
 image_postfix = prompt_postfix.replace(" ", "_")
 
+# create folder
+output_folder = f"./inference_results/{args.character_name}"
+os.makedirs(output_folder)
+
 # remember to use the place holader here
-prompt = f"A photo of {args.placeholder_token} {prompt_postfix}."
-image = pipe(prompt, num_inference_steps=35, guidance_scale=5).images[0]
-image.save(f"{args.character_name}_{image_postfix}.png")
+prompt = f"A photo of {args.placeholder_token}{prompt_postfix}."
+image = pipe(prompt, num_inference_steps=35, guidance_scale=7.5).images[0]
+image.save(os.path.join(output_folder, f"{args.character_name}_{image_postfix}.png"))
