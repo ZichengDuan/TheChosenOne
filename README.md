@@ -19,6 +19,12 @@ Shout out to the authors for their great work, also please consider giving a sta
 ## Getting Started
 
 ### Installation and Prerequisites
+Install diffuser `0.24.0.dev0`:
+```git clone https://github.com/huggingface/diffusers
+cd diffusers
+pip install .
+```
+
 Clone the repository and install the required packages:
 ```bash
 git clone git@github.com:ZichengDuan/TheChosenOne.git
