@@ -1,8 +1,7 @@
 accelerate==0.24.1
 bitsandbytes==0.41.2.post2
 datasets==2.15.0
-diffusers==0.24.0.dev0
-diffusers.egg==info
+diffusers
 huggingface_hub==0.19.4
 matplotlib==3.8.2
 numpy==1.26.2
