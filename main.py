@@ -80,7 +80,7 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             # load from default SDXL config.
             pipe = load_trained_pipeline()
         else:
-            # Note that these configurations are changned during training.
+            # Note that these configurations are changed during training.
             # Since the the training is epoch based and we use iterations, the diffuser training script automatically calculate a new epoch according to the iteration and dataset size, thus the predefined epoches will be overrided.
             args.output_dir_per_loop = os.path.join(output_dir_base, args.character_name, str(loop - 1))
             
